@@ -30,7 +30,13 @@
         "strongType": "environment",
         "displayName": "Allowed environments"
     },
-    "defaultValue": [ "common" ]
+    "defaultValue": [ "common" ],
+        "allowedValues": [
+            "common",
+            "dev",
+            "test",
+            "prod"
+        ]
    }
   },
   "policyRule": {
