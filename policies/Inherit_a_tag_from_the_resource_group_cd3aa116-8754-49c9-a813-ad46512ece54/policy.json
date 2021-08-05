@@ -9,7 +9,14 @@
    "category": "Tags"
   },
   "parameters": {
-   "tagName": {
+   "tagFirst":{
+   "type": "String",
+    "metadata": {
+     "displayName": "Tag Name",
+     "description": "Name of the tag, such as 'environment'"
+    }
+   },
+   "tagSecond": {
     "type": "String",
     "metadata": {
      "displayName": "Tag Name",
@@ -21,11 +28,19 @@
    "if": {
     "allOf": [
      {
-      "field": "[concat('tags[', parameters('tagName'), ']')]",
-      "notEquals": "[resourceGroup().tags[parameters('tagName')]]"
+      "field": "[concat('tags[', parameters('tagFirst'), ']')]",
+      "notEquals": "[resourceGroup().tags[parameters('tagFirst')]]"
      },
      {
-      "value": "[resourceGroup().tags[parameters('tagName')]]",
+      "value": "[resourceGroup().tags[parameters('tagFirst')]]",
+      "notEquals": ""
+     },
+     {
+      "field": "[concat('tags[', parameters('tagSecond'), ']')]",
+      "notEquals": "[resourceGroup().tags[parameters('tagSecond')]]"
+     },
+     {
+      "value": "[resourceGroup().tags[parameters('tagSecond')]]",
       "notEquals": ""
      }
     ]
@@ -39,8 +54,13 @@
      "operations": [
       {
        "operation": "addOrReplace",
-       "field": "[concat('tags[', parameters('tagName'), ']')]",
-       "value": "[resourceGroup().tags[parameters('tagName')]]"
+       "field": "[concat('tags[', parameters('tagFirst'), ']')]",
+       "value": "[resourceGroup().tags[parameters('tagFirst')]]"
+      },
+      {
+       "operation": "addOrReplace",
+       "field": "[concat('tags[', parameters('tagSecond'), ']')]",
+       "value": "[resourceGroup().tags[parameters('tagSecond')]]"
       }
      ]
     }
