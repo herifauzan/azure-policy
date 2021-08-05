@@ -9,12 +9,28 @@
    "category": "Tags"
   },
   "parameters": {
-   "tagName": {
+   "tagNotEmpty": {
     "type": "String",
     "metadata": {
      "displayName": "Tag Name",
      "description": "Name of the tag, such as 'environment'"
     }
+   },
+   "tagEnv": {
+    "type": "String",
+    "metadata": {
+     "displayName": "Tag Name",
+     "description": "Name of the tag, such as 'environment'"
+    }
+   },
+   "allowedEnv": {
+    "type": "array",
+    "metadata": {
+        "description": "The list of value that can be specified when deploying resources",
+        "strongType": "environment",
+        "displayName": "Allowed environments"
+    },
+    "defaultValue": [ "common" ]
    }
   },
   "policyRule": {
@@ -25,8 +41,16 @@
       "equals": "Microsoft.Resources/subscriptions/resourceGroups"
      },
      {
-      "field": "[concat('tags[', parameters('tagName'), ']')]",
+      "field": "[concat('tags[', parameters('tagNotEmpty'), ']')]",
       "exists": "false"
+     },
+     {
+      "field": "[concat('tags[', parameters('tagEnv'), ']')]",
+      "exists": "false"
+     },
+     "not": {
+         "field": "[concat('tags[', parameters('tagEnv'), ']')]",
+         "in": "[parameters('allowedEnv')]"
      }
     ]
    },
