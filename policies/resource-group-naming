@@ -1,0 +1,33 @@
+{
+  "mode": "All",
+  "parameters": {
+    "tagEnv": {
+    "type": "String",
+    "metadata": {
+     "displayName": "Environment Tag",
+     "description": "Standard Resource Group Naming"
+    }
+   }
+  },
+  "policyRule": {
+    "if": {
+      "allOf": [
+          {
+              "field": "name",
+              "like": "RG_*"
+          },
+          {
+              "field": "name",
+              "like": "[ concat( '*', concat('tags[', parameters('tagEnv'),']') ) ]"
+          },
+          {
+              "field": "type",
+              "equals": "Microsoft.Resources/subscriptions/resourceGroups"
+          }
+      ]
+    },
+    "then": {
+        "effect": "deny"
+    }
+  }
+}
