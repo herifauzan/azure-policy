@@ -12,14 +12,14 @@
    "tagFirst":{
    "type": "String",
     "metadata": {
-     "displayName": "Tag Name",
+     "displayName": "Tag First",
      "description": "Name of the tag, such as 'environment'"
     }
    },
    "tagSecond": {
     "type": "String",
     "metadata": {
-     "displayName": "Tag Name",
+     "displayName": "Tag Second",
      "description": "Name of the tag, such as 'environment'"
     }
    }
