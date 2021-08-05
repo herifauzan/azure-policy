@@ -12,14 +12,14 @@
    "tagNotEmpty": {
     "type": "String",
     "metadata": {
-     "displayName": "Tag Name",
+     "displayName": "Tag Not Empty",
      "description": "Name of the tag, such as 'environment'"
     }
    },
    "tagEnv": {
     "type": "String",
     "metadata": {
-     "displayName": "Tag Name",
+     "displayName": "Tag Environment",
      "description": "Name of the tag, such as 'environment'"
     }
    },
@@ -48,9 +48,11 @@
       "field": "[concat('tags[', parameters('tagEnv'), ']')]",
       "exists": "false"
      },
-     "not": {
+     {
+      "not": {
          "field": "[concat('tags[', parameters('tagEnv'), ']')]",
          "in": "[parameters('allowedEnv')]"
+      }
      }
     ]
    },
