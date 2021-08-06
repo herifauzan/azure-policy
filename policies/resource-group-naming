@@ -1,33 +1,40 @@
 {
   "mode": "All",
-  "parameters": {
-    "tagEnv": {
-    "type": "String",
-    "metadata": {
-     "displayName": "Environment Tag",
-     "description": "Standard Resource Group Naming"
-    }
-   }
-  },
   "policyRule": {
     "if": {
       "allOf": [
-          {
-              "field": "name",
-              "like": "RG_*"
-          },
-          {
-              "field": "name",
-              "like": "[ concat( '*', concat('tags[', parameters('tagEnv'),']') ) ]"
-          },
-          {
-              "field": "type",
-              "equals": "Microsoft.Resources/subscriptions/resourceGroups"
-          }
+        {
+          "field": "type",
+          "equals": "Microsoft.Resources/subscriptions/resourceGroups"
+        },
+        {
+          "not":
+            {
+              "anyOf":[
+                {
+                  "field": "name",
+                  "like": "rg_*"
+                },
+                {
+                  "field": "name",
+                  "like": "[ concat( '*', concat('tags[', parameters('tagEnv'),']') ) ]"
+                }
+              ]
+            }
+        }
       ]
     },
     "then": {
-        "effect": "deny"
+      "effect": "deny"
+    }
+  },
+  "parameters": {
+    "tagEnv": {
+      "type": "String",
+      "metadata": {
+        "displayName": "Environment Tag",
+        "description": "Standard Resource Group Naming"
+      }
     }
   }
 }
