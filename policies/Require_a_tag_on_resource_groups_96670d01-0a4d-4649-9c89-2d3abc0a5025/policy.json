@@ -1,66 +1,87 @@
 {
-  "mode": "All",
-  "policyRule": {
-    "if": {
-      "allOf": [
-        {
-          "field": "type",
-          "equals": "Microsoft.Resources/subscriptions/resourceGroups"
-        },
-        {"anyOf":[
-            {
-              "field": "[concat('tags[', parameters('tagNotEmpty'), ']')]",
-              "exists": "false"
-            },
-            {
-              "field": "[concat('tags[', parameters('tagEnv'), ']')]",
-              "exists": "false"
-            },
-            {
-              "not": {
-                "field": "[concat('tags[', parameters('tagEnv'), ']')]",
-                "in": "[parameters('allowedEnv')]"
-              }
-            }
-        ]}
-      ]
+  "properties": {
+    "displayName": "Enforce Resource Group Tag Values",
+    "policyType": "Custom",
+    "mode": "All",
+    "metadata": {
+      "version": "1.0.0",
+      "category": "Tags",
+      "createdBy": "3d5fb759-e337-4996-a07f-e17566e5d20c",
+      "createdOn": "2021-08-05T16:19:05.6527368Z",
+      "updatedBy": "3d5fb759-e337-4996-a07f-e17566e5d20c",
+      "updatedOn": "2021-08-06T02:55:46.365209Z"
     },
-    "then": {
-      "effect": "deny"
+    "parameters": {
+      "tagNotEmpty": {
+        "type": "String",
+        "metadata": {
+          "displayName": "Tag Not Empty",
+          "description": "Name of the tag, such as 'environment'"
+        }
+      },
+      "tagEnv": {
+        "type": "String",
+        "metadata": {
+          "displayName": "Tag Environment",
+          "description": "Name of the tag, such as 'environment'"
+        }
+      },
+      "allowedEnv": {
+        "type": "Array",
+        "metadata": {
+          "displayName": "Allowed environments",
+          "description": "The list of value that can be specified when deploying resources",
+          "strongType": "environment"
+        },
+        "allowedValues": [
+          "common",
+          "dev",
+          "test",
+          "prod",
+          "research"
+        ],
+        "defaultValue": [
+          "common"
+        ]
+      }
+    },
+    "policyRule": {
+      "if": {
+        "allOf": [
+          {
+            "field": "type",
+            "equals": "Microsoft.Resources/subscriptions/resourceGroups"
+          },
+          {
+            "anyOf": [
+              {
+                "field": "[concat('tags[', parameters('tagNotEmpty'), ']')]",
+                "exists": "false"
+              },
+              {
+                "allOf": [
+                  {
+                    "field": "[concat('tags[', parameters('tagEnv'), ']')]",
+                    "exists": "false"
+                  },
+                  {
+                    "not": {
+                      "field": "[concat('tags[', parameters('tagEnv'), ']')]",
+                      "in": "[parameters('allowedEnv')]"
+                    }
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      "then": {
+        "effect": "deny"
+      }
     }
   },
-  "parameters": {
-    "tagNotEmpty": {
-      "type": "String",
-      "metadata": {
-        "displayName": "Tag Not Empty",
-        "description": "Name of the tag, such as 'environment'"
-      }
-    },
-    "tagEnv": {
-      "type": "String",
-      "metadata": {
-        "displayName": "Tag Environment",
-        "description": "Name of the tag, such as 'environment'"
-      }
-    },
-    "allowedEnv": {
-      "type": "Array",
-      "metadata": {
-        "displayName": "Allowed environments",
-        "description": "The list of value that can be specified when deploying resources",
-        "strongType": "environment"
-      },
-      "allowedValues": [
-        "common",
-        "dev",
-        "test",
-        "prod",
-        "research"
-      ],
-      "defaultValue": [
-        "common"
-      ]
-    }
-  }
+  "id": "/subscriptions/d3b269f8-d5f8-4942-ba31-158fb47c0ce9/providers/Microsoft.Authorization/policyDefinitions/32734e07-dd40-4920-9bc4-863afd61a073",
+  "type": "Microsoft.Authorization/policyDefinitions",
+  "name": "32734e07-dd40-4920-9bc4-863afd61a073"
 }
