@@ -1,73 +1,66 @@
 {
- "properties": {
-  "displayName": "Require a tag on resource groups",
-  "policyType": "BuiltIn",
   "mode": "All",
-  "description": "Enforces existence of a tag on resource groups.",
-  "metadata": {
-   "version": "1.0.0",
-   "category": "Tags"
+  "policyRule": {
+    "if": {
+      "allOf": [
+        {
+          "field": "type",
+          "equals": "Microsoft.Resources/subscriptions/resourceGroups"
+        },
+        {"anyOf":[
+            {
+              "field": "[concat('tags[', parameters('tagNotEmpty'), ']')]",
+              "exists": "false"
+            },
+            {
+              "field": "[concat('tags[', parameters('tagEnv'), ']')]",
+              "exists": "false"
+            },
+            {
+              "not": {
+                "field": "[concat('tags[', parameters('tagEnv'), ']')]",
+                "in": "[parameters('allowedEnv')]"
+              }
+            }
+        ]}
+      ]
+    },
+    "then": {
+      "effect": "deny"
+    }
   },
   "parameters": {
-   "tagNotEmpty": {
-    "type": "String",
-    "metadata": {
-     "displayName": "Tag Not Empty",
-     "description": "Name of the tag, such as 'environment'"
-    }
-   },
-   "tagEnv": {
-    "type": "String",
-    "metadata": {
-     "displayName": "Tag Environment",
-     "description": "Name of the tag, such as 'environment'"
-    }
-   },
-   "allowedEnv": {
-    "type": "array",
-    "metadata": {
-        "description": "The list of value that can be specified when deploying resources",
-        "strongType": "environment",
-        "displayName": "Allowed environments"
-    },
-    "defaultValue": [ "common" ],
-        "allowedValues": [
-            "common",
-            "dev",
-            "test",
-            "prod"
-        ]
-   }
-  },
-  "policyRule": {
-   "if": {
-    "allOf": [
-     {
-      "field": "type",
-      "equals": "Microsoft.Resources/subscriptions/resourceGroups"
-     },
-     {
-      "field": "[concat('tags[', parameters('tagNotEmpty'), ']')]",
-      "exists": "false"
-     },
-     {
-      "field": "[concat('tags[', parameters('tagEnv'), ']')]",
-      "exists": "false"
-     },
-     {
-      "not": {
-         "field": "[concat('tags[', parameters('tagEnv'), ']')]",
-         "in": "[parameters('allowedEnv')]"
+    "tagNotEmpty": {
+      "type": "String",
+      "metadata": {
+        "displayName": "Tag Not Empty",
+        "description": "Name of the tag, such as 'environment'"
       }
-     }
-    ]
-   },
-   "then": {
-    "effect": "deny"
-   }
+    },
+    "tagEnv": {
+      "type": "String",
+      "metadata": {
+        "displayName": "Tag Environment",
+        "description": "Name of the tag, such as 'environment'"
+      }
+    },
+    "allowedEnv": {
+      "type": "Array",
+      "metadata": {
+        "displayName": "Allowed environments",
+        "description": "The list of value that can be specified when deploying resources",
+        "strongType": "environment"
+      },
+      "allowedValues": [
+        "common",
+        "dev",
+        "test",
+        "prod",
+        "research"
+      ],
+      "defaultValue": [
+        "common"
+      ]
+    }
   }
- },
- "id": "/providers/Microsoft.Authorization/policyDefinitions/96670d01-0a4d-4649-9c89-2d3abc0a5025",
- "type": "Microsoft.Authorization/policyDefinitions",
- "name": "96670d01-0a4d-4649-9c89-2d3abc0a5025"
 }
